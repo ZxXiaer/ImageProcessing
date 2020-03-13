@@ -196,6 +196,13 @@
     <None Include="UserImages.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CApplication.h" />
+    <ClInclude Include="CFont0.h" />
+    <ClInclude Include="CRange.h" />
+    <ClInclude Include="CWorkbook.h" />
+    <ClInclude Include="CWorkbooks.h" />
+    <ClInclude Include="CWorksheet.h" />
+    <ClInclude Include="CWorksheets.h" />
     <ClInclude Include="DIALOG_COLOR_TO_BINARY.h" />
     <ClInclude Include="Dialog_Gray_Level_Down.h" />
     <ClInclude Include="DrawHis.h" />

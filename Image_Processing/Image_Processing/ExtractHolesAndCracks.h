@@ -28,6 +28,8 @@ private:
 	Mat srcImage;
 	Mat FixSizeImage;
 public:
+	vector<Point> ListCracks;//保存裂缝的面积，周长
+	vector<int> ListHoles;//总表
 	int ThresholdValue=120;
 	int FirstTime = 7;
 	int SecondTime = 5;
@@ -46,4 +48,5 @@ public:
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	CString EditThresholdValue;
 	afx_msg void OnBnClickedThresholdvalueFinish();
+	afx_msg void OnBnClickedFileSaveAs();
 };

@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\Dialog">
+      <UniqueIdentifier>{f1c3cdb8-5667-4655-9b01-91cb6b4b16ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Dialog">
+      <UniqueIdentifier>{c29fda48-7d5c-4489-a6ae-723f8a0b8818}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Excel">
+      <UniqueIdentifier>{fdd5c012-88e7-4e14-86d4-20099e27826e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -67,29 +76,50 @@
     <ClInclude Include="MyImage_.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="DrawHis.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="WINDOW_Median.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Dialog_Gray_Level_Down.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Image_Diffrence.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="FREQ_TRA_FILTER.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="DIALOG_COLOR_TO_BINARY.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="MyFunction.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DIALOG_COLOR_TO_BINARY.h">
+      <Filter>头文件\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog_Gray_Level_Down.h">
+      <Filter>头文件\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawHis.h">
+      <Filter>头文件\Dialog</Filter>
+    </ClInclude>
     <ClInclude Include="ExtractHolesAndCracks.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="FREQ_TRA_FILTER.h">
+      <Filter>头文件\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Image_Diffrence.h">
+      <Filter>头文件\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="WINDOW_Median.h">
+      <Filter>头文件\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="CApplication.h">
+      <Filter>头文件\Excel</Filter>
+    </ClInclude>
+    <ClInclude Include="CFont0.h">
+      <Filter>头文件\Excel</Filter>
+    </ClInclude>
+    <ClInclude Include="CRange.h">
+      <Filter>头文件\Excel</Filter>
+    </ClInclude>
+    <ClInclude Include="CWorkbook.h">
+      <Filter>头文件\Excel</Filter>
+    </ClInclude>
+    <ClInclude Include="CWorkbooks.h">
+      <Filter>头文件\Excel</Filter>
+    </ClInclude>
+    <ClInclude Include="CWorksheet.h">
+      <Filter>头文件\Excel</Filter>
+    </ClInclude>
+    <ClInclude Include="CWorksheets.h">
+      <Filter>头文件\Excel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -111,26 +141,26 @@
     <ClCompile Include="MyImage_.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="DrawHis.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="WINDOW_Median.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="DIALOG_COLOR_TO_BINARY.cpp">
+      <Filter>源文件\Dialog</Filter>
     </ClCompile>
     <ClCompile Include="Dialog_Gray_Level_Down.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Dialog</Filter>
     </ClCompile>
-    <ClCompile Include="Image_Diffrence.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="FREQ_TRA_FILTER.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="DIALOG_COLOR_TO_BINARY.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="DrawHis.cpp">
+      <Filter>源文件\Dialog</Filter>
     </ClCompile>
     <ClCompile Include="ExtractHolesAndCracks.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="FREQ_TRA_FILTER.cpp">
+      <Filter>源文件\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Image_Diffrence.cpp">
+      <Filter>源文件\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="WINDOW_Median.cpp">
+      <Filter>源文件\Dialog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

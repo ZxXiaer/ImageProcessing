@@ -92,6 +92,7 @@ BEGIN_MESSAGE_MAP(ExtractHolesAndCracks, CDialogEx)
 	ON_WM_HSCROLL()
 	ON_WM_CTLCOLOR()
 	ON_BN_CLICKED(IDC_THRESHOLDVALUE_FINISH, &ExtractHolesAndCracks::OnBnClickedThresholdvalueFinish)
+	ON_BN_CLICKED(IDC_BUTTON1, &ExtractHolesAndCracks::OnBnClickedFileSaveAs)
 END_MESSAGE_MAP()
 
 
@@ -169,6 +170,8 @@ void ExtractHolesAndCracks::OnBnClickedThresholdvalueFinish()
 	//		描述：分割出原图的目标
 	//---------------------------------------------------------------------------------------------------
 	//rows行数，高；cols列数，宽
+	ListHoles.clear();
+	ListCracks.clear();
 	Mat BackImage = Mat::zeros(srcImage.size(), CV_8UC3);
 	for (int i = 0; i != BackImage.rows; i++)
 		for (int j = 0; j != BackImage.cols; j++)
@@ -192,7 +195,6 @@ void ExtractHolesAndCracks::OnBnClickedThresholdvalueFinish()
 	//---------------------------------------------------------------------------------------------------
 	Mat TempImage = Mat::zeros(BackImage.size(), CV_8UC3);
 
-	vector<int> ListHoles;//总表
 	int NumberHoles = 0;//孔洞的数目
 	int NumberAll = 0;//连通域的面积
 	int NumberNow = 0;//当前为哪个点
@@ -273,7 +275,7 @@ void ExtractHolesAndCracks::OnBnClickedThresholdvalueFinish()
 	// --------------------------------------------------------------------------------------------------
 	//		描述：算周长，找到裂缝,寻找边界点的数量，四邻域中存在0点，则为边界点
 	//---------------------------------------------------------------------------------------------------
-	vector<Point> ListCracks;//保存裂缝的面积，周长
+	
 	int TempLength = 0;
 	vector<int>::iterator del = ListHoles.begin();
 	
@@ -303,9 +305,9 @@ void ExtractHolesAndCracks::OnBnClickedThresholdvalueFinish()
 		TempLength = 0;
 	}
 	// --------------------------------------------------------------------------------------------------
-	//		描述：文件输出及格式转换
+	//		描述：文件输出及格式转换  (弃用，改为输出Excel文档)
 	//---------------------------------------------------------------------------------------------------
-	ofstream FileOut;
+	/*ofstream FileOut;
 	string name = "统计结果.txt";
 	FileOut.open(name);
 	CString tempname;
@@ -331,8 +333,162 @@ void ExtractHolesAndCracks::OnBnClickedThresholdvalueFinish()
 		temp = tempname;
 		char* obj = temp.GetBuffer();
 		FileOut << obj << endl;
-	}
+	}*/
 
-	/*MessageBox(_T("处理完成！"), L"提示");*/
+	MessageBox(_T("处理完成！"), L"提示");
 	
+}
+
+
+void ExtractHolesAndCracks::OnBnClickedFileSaveAs()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	// --------------------------------------------------------------------------------------------------
+	//		描述：对话框选择保存目录
+	//---------------------------------------------------------------------------------------------------
+	CString strFilter;
+	//strFilter ="位图文件|*.bmp|JPEG 图像文件|*.jpg|GIF 图像文件|*.gif|PNG 图像文件|*.png||";   //
+	strFilter ="Excel (*.xlsx)|*.*||";   //
+	CFileDialog dlg(FALSE,NULL,NULL,NULL,strFilter);
+	if ( IDOK != dlg.DoModal()) 
+		return;
+	// 如果用户没有指定文件扩展名，则为其添加一个
+	CString strFileName;
+	//CString strExtension;
+	//strFileName = dlg.m_ofn.lpstrFile;   //  获得文件名
+	strFileName = dlg.GetPathName();
+	// --------------------------------------------------------------------------------------------------
+	//		描述：//excel 接口部分
+	//---------------------------------------------------------------------------------------------------
+	_excel::CApplication app;
+	_excel::CFont0 font;
+	_excel::CRange range;
+	_excel::CRange col;
+	_excel::CWorkbook book;
+	_excel::CWorkbooks books;
+	_excel::CWorksheet sheet;
+	_excel::CWorksheets sheets;
+	CoInitialize(NULL);//初始化COM，最后还有CoUninitialize
+	COleVariant covOptional((long)DISP_E_PARAMNOTFOUND, VT_ERROR);
+
+	if (!app.CreateDispatch(_T("EXCEL.application"))) //启动excel
+	{
+		AfxMessageBox(_T("居然你连OFFICE都没有安装吗?"));
+		return;
+	}
+	app.put_Visible(TRUE);//设置表可见性
+	app.put_DisplayFullScreen(FALSE);//设置全屏显示
+	app.put_DisplayAlerts(FALSE);//屏蔽警告
+
+	books = app.get_Workbooks();
+	book = books.Add(vtMissing);//新建一个book
+	
+	//获取工作表worksheet(三种方法)
+	sheet = book.get_ActiveSheet();
+	sheets = book.get_Sheets();
+	//worksheet = worksheets.get_Item((_variant_t("sheet2")));
+	//worksheet = worksheets.get_Item((_variant_t(1)));
+
+	// --------------------------------------------------------------------------------------------------
+	//		描述：编写文件内容
+	//---------------------------------------------------------------------------------------------------
+	CString TempStr;
+	range = sheet.get_Range(_variant_t("A1"), _variant_t("G1"));
+	range.Merge(_variant_t((long)0));
+	TempStr.Format(TEXT("本样品一共%d个裂缝，%d个孔洞，采用的分割阈值为：%d"), ListCracks.size(), ListHoles.size(), ThresholdValue);
+	range.put_Value2(_variant_t(TempStr));//参数是二维数组可以批量设置单元格值
+	range = sheet.get_Range(_variant_t("A2"), _variant_t("A2"));
+	range.put_Value2(_variant_t("孔洞编号"));
+	range = sheet.get_Range(_variant_t("B2"), _variant_t("B2"));
+	range.put_Value2(_variant_t("面积"));
+	range = sheet.get_Range(_variant_t("D2"), _variant_t("D2"));
+	range.put_Value2(_variant_t("面积"));
+	range = sheet.get_Range(_variant_t("C2"), _variant_t("C2"));
+	range.put_Value2(_variant_t("裂缝编号"));
+	range = sheet.get_Range(_variant_t("E2"), _variant_t("E2"));
+	range.put_Value2(_variant_t("长度"));
+	//
+	//int* TempNumber;
+	//TempNumber = new int[ListHoles.size()];
+	//本来尝试用二维数组批量赋值，但是尝试失败
+	for (int i = 0; i <  ListHoles.size(); i++)
+	{
+		int Temp = i + 3;
+		TempStr.Format(TEXT("A%d"), Temp);
+		range = sheet.get_Range(_variant_t(TempStr), _variant_t(TempStr));
+		TempStr.Format(TEXT("孔%d"), i);
+		range.put_Value2(_variant_t(TempStr));
+		TempStr.Format(TEXT("B%d"), Temp);
+		range = sheet.get_Range(_variant_t(TempStr), _variant_t(TempStr));
+		range.put_Value2(_variant_t(ListHoles[i]));
+	}
+	for (int i = 0; i < ListCracks.size(); i++)
+	{
+		int Temp = i + 3;
+		TempStr.Format(TEXT("C%d"), Temp);
+		range = sheet.get_Range(_variant_t(TempStr), _variant_t(TempStr));
+		TempStr.Format(TEXT("裂%d"), i);
+		range.put_Value2(_variant_t(TempStr));
+		TempStr.Format(TEXT("D%d"), Temp);
+		range = sheet.get_Range(_variant_t(TempStr), _variant_t(TempStr));
+		range.put_Value2(_variant_t(ListCracks[i].x));
+		TempStr.Format(TEXT("E%d"), Temp);
+		range = sheet.get_Range(_variant_t(TempStr), _variant_t(TempStr));
+		int length = ListCracks[i].y*0.5;
+		range.put_Value2(_variant_t(length));
+	}
+	
+	//设置单元格格式
+	//range = sheet.get_Range(_variant_t("F2"), _variant_t("G5"));
+	////range.put_HorizontalAlignment(_variant_t(XlHAlign::xlHAlignRight));//水平对齐
+	////range.put_VerticalAlignment(_variant_t(XlVAlign::xlVAlignBottom));//竖直对齐
+	//range.put_ColumnWidth(_variant_t(35));//单位不明
+	//range.put_RowHeight(_variant_t(24));//磅
+	//font = range.get_Font();//字体
+	//font.put_Italic(_variant_t(1));//斜体
+	//interior = range.get_Interior();//底色
+	/*interior.put_Color(_variant_t(76));*/
+
+	////获取单元格内容
+	//CString getdata;//定义字符串变量
+	//_variant_t rValue;
+	//range = sheet.get_Range(_variant_t("A1"), _variant_t("A1"));
+	//rValue = range.get_Value2();
+	//getdata = rValue.bstrVal;
+
+	//未添加线框类
+	////线框，border会对range中所有单元格都做设置，
+	//range = worksheet.get_Range(_variant_t("A5"), _variant_t("C9"));
+	//borders = range.get_Borders();
+	//borders.put_LineStyle(_variant_t(XlLineStyle::xlDouble));
+	//range = worksheet.get_Range(_variant_t("A12"), _variant_t("C13"));
+	//range.BorderAround(_variant_t(XlLineStyle::xlDashDot), 2, 8, vtMissing);//外框线
+
+	//另存为
+	covOptional = COleVariant((long)DISP_E_PARAMNOTFOUND, VT_ERROR);
+	COleVariant varZero((short)0);
+	COleVariant varTrue(short(1), VT_BOOL);
+	COleVariant varFalse(short(0), VT_BOOL);
+
+	book.SaveAs(COleVariant(strFileName), vtMissing, vtMissing, vtMissing,
+		vtMissing, vtMissing, (long)0, vtMissing,
+		vtMissing, vtMissing, vtMissing, vtMissing, vtMissing);
+	//workbook.Save();
+
+	/*AfxMessageBox(_T(""));*/
+
+	//所有东西都需要ReleaseDispatch，否则会报错
+	/*borders.ReleaseDispatch();*/
+
+	font.ReleaseDispatch();
+	/*interior.ReleaseDispatch();*/
+	range.ReleaseDispatch();
+	book.ReleaseDispatch();
+	books.ReleaseDispatch();
+	sheet.ReleaseDispatch();
+	sheets.ReleaseDispatch();
+	//app.Quit();//Excel退出
+	app.ReleaseDispatch();
+	CoUninitialize();//对应CoInitialize
+	/*OnOK();*///退出子对话框
 }
